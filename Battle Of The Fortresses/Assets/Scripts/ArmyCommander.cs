@@ -7,10 +7,9 @@ public class ArmyCommander : MonoBehaviour
     [SerializeField] private GameObject _unitPrefab;
     [SerializeField] private float _unitSpeed;
 
-    [SerializeField] private ArmyFormator armyFormator = new ArmyFormator();
+    [SerializeField] private ArmyFormator armyFormator /*= new ArmyFormator()*/;
 
     private readonly List<GameObject> _spawnedUnits = new List<GameObject>();
-
 
     private Transform _parent;
 

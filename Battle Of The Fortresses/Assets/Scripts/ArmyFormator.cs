@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ArmyFormator
+public class ArmyFormator : MonoBehaviour
 {
-
     [SerializeField] private float _spread = 2f;
     [SerializeField] private int _unitWidth = 3;
     [SerializeField] private int _unitDepth = 3;
     [SerializeField] private bool _isHollow = true;
+    [SerializeField] private float _noise = 0.5f;
+    
    
     private List<Vector3> _points = new List<Vector3>();
 
@@ -45,10 +46,19 @@ public class ArmyFormator
 
                 position -= middleOffset;
 
+                position += GetNoise(position);
+
                 position *= _spread;
 
                 yield return position;
             }
         }
+    }
+
+    private Vector3 GetNoise(Vector3 pos)
+    {
+        var noise = Mathf.PerlinNoise(pos.x * _noise, pos.z * _noise);
+
+        return new Vector3(noise, 0, noise);
     }
 }
