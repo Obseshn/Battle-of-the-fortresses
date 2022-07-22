@@ -8,7 +8,7 @@ public class ArmyStateEffectController : MonoBehaviour
     private void Start()
     {
         main = _ringParticle.main;
-        ChangeEffectColor(Color.black);
+        ChangeEffectColor(Color.blue);
     }
 
     public void ChangeEffectColor(Color color)

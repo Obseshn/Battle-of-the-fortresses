@@ -22,16 +22,17 @@ public class ArmyCommander : MonoBehaviour
     {
         for (int i = 0; i < 7; i++)
         {
-            SpawnUnit();
+            AddUnit();
         }
         
     }
     private void Update()
     {
+        // ≈сли игрок двигаетс€, то арми€ должна идти за ним.
         armyFormator.SetFormation(_spawnedUnits, transform, _unitSpeed);
     }
 
-    public void SpawnUnit(/* IEnumerable<Vector3> points*/ )
+    public void AddUnit(/* IEnumerable<Vector3> points*/ )
     {
             var unit = Instantiate(_unitPrefab, transform.position /*+ pos*/, Quaternion.identity, _parent);
             _spawnedUnits.Add(unit);

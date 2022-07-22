@@ -33,6 +33,7 @@ public class ArmyFormator : MonoBehaviour
 
     public IEnumerable<Vector3> EvaluatePoints()
     {
+
         var middleOffset = new Vector3(_unitWidth * 0.5f, 0, _unitDepth * 0.5f);
 
         for (int x = 0; x < _unitWidth; x++)
