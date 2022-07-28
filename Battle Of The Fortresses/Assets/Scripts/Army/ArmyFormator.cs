@@ -9,7 +9,7 @@ public class ArmyFormator : MonoBehaviour
     [SerializeField] private int _unitWidth = 3;
     [SerializeField] private int _unitDepth = 3;
     [SerializeField] private bool _isHollow = true;
-    [SerializeField] private float _noise = 0.5f;
+    [SerializeField] private float _noise = 0f;
     
    
     private List<Vector3> _points = new List<Vector3>();
