@@ -5,10 +5,10 @@ using System;
 
 public class AttackController : MonoBehaviour
 {
-    [SerializeField] private string _tag_Target;
+    [SerializeField] private string _tagOfTarget;
     [SerializeField] private Transform _attackTarget;
  
-    [SerializeField] private float _attackCooldown = 2;
+    [SerializeField] private readonly float _attackCooldown = 2;
     [SerializeField] private float _attackCDCounter;
     [SerializeField] private float _attackDamage = 1f;
 
@@ -29,10 +29,10 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(_tag_Target))
+        if (other.CompareTag(_tagOfTarget))
         {
             _attackTarget = other.transform;
-            TargetEnteredToAttackRadius?.Invoke(other.transform);
+          //  TargetEnteredToAttackRadius?.Invoke(other.transform);
             _attackCDCounter = _attackCooldown;
             Debug.Log("Target has entered to the attack radius");
         }
@@ -40,7 +40,7 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(_tag_Target))
+        if (other.CompareTag(_tagOfTarget))
         {
             _attackTarget = null;
             CurrentAttackTargetHasLosted?.Invoke();
@@ -48,6 +48,7 @@ public class AttackController : MonoBehaviour
         }
     }
 
+    // Ready to attack event
     private void DoAttack(Transform target)
     {
         Debug.Log(target.name + "has been attacked!");
