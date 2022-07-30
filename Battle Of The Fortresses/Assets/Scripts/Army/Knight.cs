@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Knight : ArmyUnit
 {
-    protected override float AttackDamage => _attackDamage;
-
-    private float _attackDamage = 2f;
+    protected override float AttackDamage => throw new System.NotImplementedException();
 
     protected override void DoAttack(float attackDamage, Transform targetPosition)
     {

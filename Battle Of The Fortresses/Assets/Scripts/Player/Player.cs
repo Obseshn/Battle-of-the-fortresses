@@ -1,12 +1,6 @@
 using UnityEngine;
 
-public class Player : ArmyUnit
+public class Player : MonoBehaviour
 {
-    protected override float AttackDamage => throw new System.NotImplementedException();
-
-    protected override void DoAttack(float attackDamage, Transform targetPosition)
-    {
-        Debug.Log("Player has attacked!");
-    }
 
 }

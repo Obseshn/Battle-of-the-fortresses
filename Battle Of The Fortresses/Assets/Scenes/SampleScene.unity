@@ -487,9 +487,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dfa50b862abb3946a1845a6b80169ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tagOfTarget: Army
-  attackController: {fileID: 2060028655}
-  _viewingTarget: {fileID: 0}
+  tagOfTarget: 
+  viewingTarget: {fileID: 0}
+  chaseController: {fileID: 0}
 --- !u!4 &458226536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1814747013923226429, guid: 63c67bbc15407834f925f8f761c08a24, type: 3}
@@ -1084,6 +1084,7 @@ GameObject:
   - component: {fileID: 1056082245}
   - component: {fileID: 1056082246}
   - component: {fileID: 1056082247}
+  - component: {fileID: 1056082249}
   - component: {fileID: 1056082248}
   m_Layer: 0
   m_Name: Turtle
@@ -1165,9 +1166,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2632a7fd09cce64a9c879cebc232c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chaseTarget: {fileID: 0}
+  chaseSpeed: 2
+--- !u!114 &1056082249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056082243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5729c32da1aec4d932665b05b01f04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUnitShooter: 0
+  tagOfHostileEntity: Army
+  chaseController: {fileID: 1056082248}
   viewingController: {fileID: 385936249}
-  _moveTarget: {fileID: 0}
-  _moveSpeed: 2
+  attackController: {fileID: 2060028655}
 --- !u!1001 &1155722388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1590,6 +1607,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 973287416412621717, guid: 110cfac1b12748b459efafcda9c8e674, type: 3}
   _spawnPoint: {fileID: 1540349476}
+--- !u!114 &1644963520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -7375237212404714522, guid: bfe5d8c605105524399cb984aad66e8f, type: 3}
+  m_PrefabInstance: {fileID: 1803498111}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dfa50b862abb3946a1845a6b80169ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1673577369 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7237671037783612016, guid: 110cfac1b12748b459efafcda9c8e674, type: 3}
@@ -1661,6 +1689,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1770288410}
   - component: {fileID: 1770288409}
+  - component: {fileID: 1770288412}
+  - component: {fileID: 1770288411}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -1699,6 +1729,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1770288411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770288408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2632a7fd09cce64a9c879cebc232c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseTarget: {fileID: 0}
+  chaseSpeed: 2
+--- !u!114 &1770288412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770288408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5729c32da1aec4d932665b05b01f04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUnitShooter: 1
+  tagOfHostileEntity: Enemy
+  chaseController: {fileID: 1770288411}
+  viewingController: {fileID: 1644963520}
+  attackController: {fileID: 1523386745}
 --- !u!1 &1801345744
 GameObject:
   m_ObjectHideFlags: 0
@@ -7093,6 +7154,10 @@ PrefabInstance:
     - target: {fileID: 7894357689167373132, guid: 110cfac1b12748b459efafcda9c8e674, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7894357689167373135, guid: 110cfac1b12748b459efafcda9c8e674, type: 3}
+      propertyPath: tagOfTarget
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 7894357689167373135, guid: 110cfac1b12748b459efafcda9c8e674, type: 3}
       propertyPath: _tagOfTarget
