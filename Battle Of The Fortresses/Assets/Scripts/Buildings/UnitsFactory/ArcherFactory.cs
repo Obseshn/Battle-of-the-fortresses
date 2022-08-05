@@ -1,0 +1,6 @@
+﻿ 
+class ArcherFactory : UnitsGenericFactory<Archer>
+{
+
+}
+

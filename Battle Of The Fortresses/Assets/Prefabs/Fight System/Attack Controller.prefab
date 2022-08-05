@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6121085580211371439}
-  - component: {fileID: 6121085580211371438}
   - component: {fileID: 6121085580211371436}
+  - component: {fileID: 6121085580211371438}
   m_Layer: 0
   m_Name: Attack Controller
   m_TagString: Untagged
@@ -33,6 +33,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6121085580211371436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6121085580211371437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a713eab8cfc12e94ca493c0a7c41ed93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagOfTarget: 
+  attackTarget: {fileID: 0}
+  attackCDCounter: 0
+  attackDamage: 1
 --- !u!135 &6121085580211371438
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -46,20 +62,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.0247095
   m_Center: {x: -0.08545327, y: 0.31336328, z: -0.12589121}
---- !u!114 &6121085580211371436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6121085580211371437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a713eab8cfc12e94ca493c0a7c41ed93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tag_Target: Army
-  _attackTarget: {fileID: 0}
-  _attackCooldown: 2
-  _attackCDCounter: 0
-  _attackDamage: 1

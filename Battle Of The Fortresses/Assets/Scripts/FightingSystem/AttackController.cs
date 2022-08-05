@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(SphereCollider))]
 public class AttackController : MonoBehaviour
 {
     [SerializeField] public string tagOfTarget;
@@ -10,16 +11,28 @@ public class AttackController : MonoBehaviour
  
     [SerializeField] private readonly float attackCooldown = 2;
     [SerializeField] private float attackCDCounter;
-    [SerializeField] private float attackDamage = 1f;
+    [SerializeField] public float attackRadius;
 
     public event Action<Transform> FindedTargetEvent;
     public event Action<Transform> LostTargetEvent;
+    public event Action<Transform> ReadyToAttackEvent;
 
+    private void Start()
+    {
+        SphereCollider attackRange = gameObject.GetComponent<SphereCollider>();
+        attackRange.isTrigger = true;
+        if (attackRadius <= 0)
+        {
+            Debug.LogError("Current attack radius less or equals to zero! Check \"AttackController\" object in children of: " + gameObject.transform.parent.name);
+        }
+        attackRange.radius = attackRadius;
+
+    }
     private void Update()
     {
         if (attackTarget != null && attackCDCounter <= 0)
         {
-            DoAttack(attackTarget);
+            SendReadyToAttack(attackTarget);
         }
         if (attackCDCounter >= 0)
         {
@@ -49,10 +62,11 @@ public class AttackController : MonoBehaviour
     }
 
     // Ready to attack event
-    private void DoAttack(Transform target)
+    private void SendReadyToAttack(Transform target)
     {
         Debug.Log(target.name + "has been attacked!");
-        target.GetComponent<HealthSystem>().TakeDamage(attackDamage);
+        /*target.GetComponent<HealthSystem>().TakeDamage(attackDamage);*/
+        ReadyToAttackEvent?.Invoke(target);
         attackCDCounter = attackCooldown;
     }
 }
