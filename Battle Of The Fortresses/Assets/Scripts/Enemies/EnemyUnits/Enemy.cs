@@ -13,7 +13,7 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
     [SerializeField] public bool isOnSpotPosition;
 
     protected Transform ViewingTarget;
-    protected Transform AttackTarget;
+    protected Transform AttackTarget; 
 
     [SerializeField] private AttackController attackController;
     [SerializeField] private ViewingController viewingController;
@@ -59,7 +59,16 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
     {
         transform.position = Vector3.MoveTowards(transform.position, target.position, MoveSpeed * Time.deltaTime);
     }
-    public abstract void TakeDamage(float damage);
+    public virtual void TakeDamage(float damage)
+    {
+        if (CurrentHealth <= damage)
+        {
+            DestroyYourself();
+            return;
+        }
+
+        CurrentHealth -= (damage - (damage * GetArmorInPercent(Armor)));
+    }
     protected abstract void DoAttack(Transform targetPosition);
     protected abstract void DestroyYourself();
 
@@ -83,5 +92,10 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
     protected void RemoveViewingTarget()
     {
         ViewingTarget = null;
+    }
+
+    protected float GetArmorInPercent(float armor)
+    {
+        return armor / 100;
     }
 }

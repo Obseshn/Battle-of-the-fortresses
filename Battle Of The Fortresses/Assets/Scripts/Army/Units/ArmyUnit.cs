@@ -13,7 +13,7 @@ public abstract class ArmyUnit : MonoBehaviour, IDamageAble
     protected Transform ViewingTarget;
     protected Transform AttackTarget;
 
-    [SerializeField] private AttackController attackController;
+    [SerializeField] protected AttackController attackController;
     [SerializeField] private ViewingController viewingController;
 
     private void OnEnable()
@@ -47,8 +47,17 @@ public abstract class ArmyUnit : MonoBehaviour, IDamageAble
     {
         transform.position = Vector3.MoveTowards(transform.position, target.position, MoveSpeed * Time.deltaTime);
     }
-    public abstract void TakeDamage(float damage);
-    protected abstract void DoAttack(Transform targetPosition);
+    public virtual void TakeDamage(float damage)
+    {
+        if (CurrentHealth <= damage)
+        {
+            DestroyYourself();
+            return;
+        }
+
+        CurrentHealth -= (damage - (damage * GetArmorInPercent(Armor)));
+    }
+    protected abstract void DoAttack(Transform target);
     protected abstract void DestroyYourself();
 
     protected void SetAttackTarget(Transform target)
@@ -71,5 +80,10 @@ public abstract class ArmyUnit : MonoBehaviour, IDamageAble
     protected void RemoveViewingTarget()
     {
         ViewingTarget = null;
-    } 
+    }
+
+    protected float GetArmorInPercent(float armor)
+    {
+        return armor / 100;
+    }
 }

@@ -14,12 +14,7 @@ public class Knight : ArmyUnit
 
     public override void TakeDamage(float damage)
     {
-        if (damage >= CurrentHealth)
-        {
-            DestroyYourself();
-            return;
-        }
-        CurrentHealth -= (damage - Armor);
+        base.TakeDamage(damage);
     }
 
     protected override void DestroyYourself()
@@ -31,6 +26,7 @@ public class Knight : ArmyUnit
     protected override void DoAttack(Transform targetPosition)
     {
         Debug.Log("Knight attacked!!");
+        targetPosition.GetComponent<IDamageAble>().TakeDamage(AttackDamage);
     }
 
 }

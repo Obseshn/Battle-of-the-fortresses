@@ -6,13 +6,8 @@ public class Turtle : Enemy
 {
     public override void TakeDamage(float damage)
     {
-        if (CurrentHealth <= damage)
-        {
-            DestroyYourself();
-            return;
-        }
+        base.TakeDamage(damage);
 
-        CurrentHealth -= (damage - Armor);
     }
 
     protected override void DestroyYourself()
@@ -20,8 +15,9 @@ public class Turtle : Enemy
         Destroy(gameObject);
     }
 
-    protected override void DoAttack(Transform targetPosition)
+    protected override void DoAttack(Transform target)
     {
-        Debug.Log("Turtle attacked!");
+        target.GetComponent<IDamageAble>().TakeDamage(AttackDamage);
+        Debug.Log("Turtle has attacked!");
     }
 }

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TagOfTarget: Enemy
-  AttackDamage: 10
+  AttackDamage: 3
   Armor: 5
   MoveSpeed: 5
   attackController: {fileID: 6500068172352099265}

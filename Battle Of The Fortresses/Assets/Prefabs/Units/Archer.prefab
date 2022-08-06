@@ -33,6 +33,7 @@ Transform:
   m_Children:
   - {fileID: 221499394101066248}
   - {fileID: 5794482476019831806}
+  - {fileID: 5097750109240606368}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,12 +50,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TagOfTarget: Enemy
-  AttackDamage: 15
+  AttackDamage: 5
   Armor: 2
-  AttackRange: 5
   MoveSpeed: 5
   attackController: {fileID: 5794482476019831805}
   viewingController: {fileID: 331109109326873090}
+  arrow: {fileID: 7519481705534907794, guid: 970a17918aeadaf43a844261fa194d0f, type: 3}
+  fireStartPosition: {fileID: 5097750109240606368}
+  angleInDegrees: 70
+  g: 9.8
 --- !u!135 &331109109326873091
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -82,6 +86,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tagOfTarget: 
   viewingTarget: {fileID: 0}
+--- !u!1 &6514183296219149480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5097750109240606368}
+  m_Layer: 0
+  m_Name: FireStartPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5097750109240606368
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6514183296219149480}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.045, y: 1.02, z: 0.591}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 331109109326873089}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &331109109168791011
 PrefabInstance:
   m_ObjectHideFlags: 0
