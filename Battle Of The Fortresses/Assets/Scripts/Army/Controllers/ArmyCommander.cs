@@ -8,7 +8,7 @@ public class ArmyCommander : MonoBehaviour
     [SerializeField] private Barrack barrak;
     [SerializeField] private ArmyFormator armyFormator;
     [SerializeField] private ArmyStateEffectController armyStateEffectController;
-    [SerializeField] private ArmyCommands currentStateOfArmy = ArmyCommands.Follow;
+    [SerializeField] private StatesOfArmy currentStateOfArmy = StatesOfArmy.Follow;
     [SerializeField] private Transform armyAttackPos;
     [SerializeField] private Transform armyFollowPos;
     [SerializeField] private LayerMask layerMask;
@@ -16,9 +16,11 @@ public class ArmyCommander : MonoBehaviour
 
     [SerializeField] private float armyObserverRadius = 5f;
     private float checkAttackRadiusTime = 1f;
-    private float attackRadiusCounter;
+    [SerializeField] private float attackRadiusCounter;
 
     private readonly List<GameObject> UnitsInArmy = new List<GameObject>();
+    private readonly List<GameObject> UnitsWithoutTarget = new List<GameObject>();
+    private readonly List<GameObject> UnitsToFollow = new List<GameObject>();
     private void Start()
     {
         currentArmyPos = armyFollowPos;
@@ -27,73 +29,119 @@ public class ArmyCommander : MonoBehaviour
     }
     private void Update()
     {
-        if (currentStateOfArmy == ArmyCommands.StandStill)
+        Debug.Log($"UnInArmy: {UnitsInArmy.Count} \t UnWithOutT: {UnitsWithoutTarget.Count} \t UnToF: {UnitsToFollow.Count}");
+
+        if (currentStateOfArmy == StatesOfArmy.StandStill)
         {
             return;
         }
+
         if (UnitsInArmy.Count >= 1)
         {
-            armyFormator.SetFormation(UnitsInArmy, currentArmyPos, lineUpSpeed);
+            armyFormator.SetFormation(UnitsToFollow, currentArmyPos, lineUpSpeed);
         }
 
-        if (currentStateOfArmy == ArmyCommands.BeReadyToFight)
+        if (currentStateOfArmy == StatesOfArmy.BeReadyToFight)
         {
             if (attackRadiusCounter <= 0)
             {
-                /*Collider[] enemiesInArmyObserver = Physics.OverlapSphere(currentArmyPos.position, armyObserverRadius, layerMask);
-                if (enemiesInArmyObserver.Length != 0)
+
+                if (UnitsInArmy.Count != 0)
                 {
-                    foreach (var unit in UnitsInArmy)
+                    Collider[] enemiesInArmyObserver = Physics.OverlapSphere(currentArmyPos.position, armyObserverRadius, layerMask);
+
+                    FindUnitsWithoutTarget();
+
+                    if (enemiesInArmyObserver.Length != 0 && UnitsWithoutTarget.Count > 0)
                     {
-                        unit.GetComponentInChildren<ViewingController>().SetViewingTarget(enemiesInArmyObserver[Random.Range(0, enemiesInArmyObserver.Length)].transform); // After this units still have target!
+                        GiveTargetToUnits(enemiesInArmyObserver);
                     }
                     attackRadiusCounter = checkAttackRadiusTime;
-                }*/
-                
+                }
             }
             else
             {
                 attackRadiusCounter -= Time.deltaTime;
             }
-            
+
         }
+    }
+
+    private void FindUnitsWithoutTarget()
+    {
+        foreach (var unit in UnitsInArmy)
+        {
+            if (unit.GetComponent<ArmyUnit>().ViewingTarget == null && UnitsWithoutTarget.Contains(unit) == false)
+            {
+                UnitsWithoutTarget.Add(unit);
+                UnitsToFollow.Add(unit);
+            }
+        }
+    }
+    private void GiveTargetToUnits(Collider[] enemiesInArmyObserver)
+    {
+        foreach (var unit in UnitsWithoutTarget)
+        {
+            unit.GetComponent<ArmyUnit>().SetViewingTarget(enemiesInArmyObserver[Random.Range(0, enemiesInArmyObserver.Length)].transform); // !!!!!!
+            UnitsToFollow.Remove(unit);
+        }
+        UnitsWithoutTarget.Clear();
+        Debug.Log(UnitsWithoutTarget.Capacity + " " + UnitsWithoutTarget.Count);
     }
 
     public void ChangeCurrentStateOfArmy(int commandNumber)
     {
-        currentStateOfArmy = (ArmyCommands)commandNumber;
-        if (commandNumber == (int)ArmyCommands.BeReadyToFight)
+        currentStateOfArmy = (StatesOfArmy)commandNumber;
+        if (commandNumber == (int)StatesOfArmy.BeReadyToFight)
         {
+            foreach (var unit in UnitsInArmy)
+            {
+                ArmyUnit currentUnit = unit.GetComponent<ArmyUnit>();
+
+                currentUnit.RemoveViewingTarget();
+                /*currentUnit.FindTargetEvent += OnArmyUnitFindTarget;    // EVENT SUBSCRIPTION*/
+                currentUnit.ChangeCurrentState(StatesOfArmy.BeReadyToFight);
+            }
+
             armyStateEffectController.ChangeEffectColor(Color.red);
             currentArmyPos = armyAttackPos;
         }
-        else if (commandNumber == (int)ArmyCommands.Follow)
+        else if (commandNumber == (int)StatesOfArmy.Follow)
         {
             armyStateEffectController.ChangeEffectColor(Color.blue);
             currentArmyPos = armyFollowPos;
+            foreach(var unit in UnitsInArmy)
+            {
+                unit.GetComponent<ArmyUnit>().ChangeCurrentState(StatesOfArmy.Follow);
+            }
         }
-        else if (commandNumber == (int)ArmyCommands.StandStill)
+        else if (commandNumber == (int)StatesOfArmy.StandStill)
         {
             armyStateEffectController.ChangeEffectColor(Color.green);
+            foreach (var unit in UnitsInArmy)
+            {
+                unit.GetComponent<ArmyUnit>().ChangeCurrentState(StatesOfArmy.StandStill);
+            }
         }
     }
 
     public void AddUnitToArmyList(GameObject unit)
     {
         UnitsInArmy.Add(unit);
+        UnitsWithoutTarget.Add(unit);
+        UnitsToFollow.Add(unit);
     }
 
     public void KillUnit(GameObject unit)
     {
+        /*unit.GetComponent<ArmyUnit>().FindTargetEvent -= OnArmyUnitFindTarget;*/
+/*        unit.GetComponent<ArmyUnit>().LostTargetEvent -= OnArmyUnitFindTarget;*/
         UnitsInArmy.Remove(unit);
+        UnitsWithoutTarget.Remove(unit);
+        UnitsToFollow.Remove(unit);
     }
 
-    public enum ArmyCommands
-    {
-        BeReadyToFight,
-        StandStill,
-        Follow
-    }
+    
 
     private void OnDrawGizmosSelected()
     {
@@ -103,6 +151,25 @@ public class ArmyCommander : MonoBehaviour
         }
         
     }
+
+    /*private void OnArmyUnitLostTarget(ArmyUnit unit)
+    {
+        UnitsWithoutTarget.Add(unit.gameObject);
+        Debug.Log("OnArmyUnitLostTarget method");
+    }*/
+
+    /*private void OnArmyUnitFindTarget(ArmyUnit unit)
+    {
+        UnitsWithoutTarget.Remove(unit.gameObject);
+    }*/
+
+}
+
+public enum StatesOfArmy
+{
+    BeReadyToFight,
+    StandStill,
+    Follow
 }
 
 

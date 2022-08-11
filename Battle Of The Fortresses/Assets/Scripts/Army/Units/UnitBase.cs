@@ -1,64 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour, IDamageAble
+
+public abstract class UnitBase : MonoBehaviour, IDamageAble
 {
     public float CurrentHealth { get; set; }
     [SerializeField] protected string TagOfTarget;
     [SerializeField] protected float AttackDamage;
     [SerializeField] protected float Armor;
     [SerializeField] protected float MoveSpeed;
-    [SerializeField] public Transform spotPosition;
-    [SerializeField] public bool isOnSpotPosition;
 
-    protected Transform ViewingTarget;
-    protected Transform AttackTarget; 
+    public Transform ViewingTarget;
+    protected Transform AttackTarget;
 
-    [SerializeField] private AttackController attackController;
-    [SerializeField] private ViewingController viewingController;
+    [SerializeField] protected AttackController attackController;
 
     private void OnEnable()
     {
         attackController.FindedTargetEvent += SetAttackTarget;
         attackController.LostTargetEvent += RemoveAttackTarget;
         attackController.ReadyToAttackEvent += DoAttack;
-
-        viewingController.FindedViewTarget += SetViewingTarget;
-        viewingController.LostViewTarget += RemoveViewingTarget;
-    }
-    private void Start()
-    {
-        attackController.tagOfTarget = TagOfTarget;
-        viewingController.tagOfTarget = TagOfTarget;
-    }
-
-    private void Update()
-    {
-        if (ViewingTarget == null)
-        {
-            if (isOnSpotPosition)
-            {
-                return;
-            }
-
-            MoveTo(spotPosition);
-            transform.LookAt(spotPosition);
-            return;
-        }
-            
-        if (AttackTarget == null)
-        {
-            MoveTo(ViewingTarget);
-        }
-
-        transform.LookAt(ViewingTarget);
     }
 
     protected void MoveTo(Transform target)
     {
         transform.position = Vector3.MoveTowards(transform.position, target.position, MoveSpeed * Time.deltaTime);
     }
+
     public virtual void TakeDamage(float damage)
     {
         if (CurrentHealth <= damage)
@@ -69,9 +37,6 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
 
         CurrentHealth -= (damage - (damage * GetArmorInPercent(Armor)));
     }
-    protected abstract void DoAttack(Transform targetPosition);
-    protected abstract void DestroyYourself();
-
     protected void SetAttackTarget(Transform target)
     {
         AttackTarget = target;
@@ -84,12 +49,12 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
         ViewingTarget = target;
     }
 
-    protected void SetViewingTarget(Transform target)
+    public void SetViewingTarget(Transform target)
     {
         ViewingTarget = target;
     }
 
-    protected void RemoveViewingTarget()
+    public void RemoveViewingTarget()
     {
         ViewingTarget = null;
     }
@@ -98,4 +63,9 @@ public abstract class Enemy : MonoBehaviour, IDamageAble
     {
         return armor / 100;
     }
+
+    protected abstract void DestroyYourself();
+
+    protected abstract void DoAttack(Transform target);
 }
+

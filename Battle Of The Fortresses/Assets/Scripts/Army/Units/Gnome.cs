@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Gnome : ArmyUnit
 {
+    private static float MaxHealth = 1000f;
+    private void Awake()
+    {
+        CurrentHealth = MaxHealth;
+    }
+
     [SerializeField] private LayerMask enemyLayer;
     public override void TakeDamage(float damage)
     {

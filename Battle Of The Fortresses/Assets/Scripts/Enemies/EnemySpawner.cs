@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private EnemyTurtleFactory enemyTurtleFactory;
-
+    public Action<EnemyUnit> EnemySpawnedEvent;
     public void CreateGroupOfTurtle(float countOfTurtles)
     {
         for (int i = 0; i < countOfTurtles; i++)
@@ -16,7 +17,8 @@ public class EnemySpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         var prefab = enemyTurtleFactory.GetNewInstance();
-        prefab.GetComponent<Enemy>().spotPosition = enemyTurtleFactory._spawnPoint;
+        prefab.GetComponent<EnemyUnit>().spotPosition = enemyTurtleFactory._spawnPoint;
+        EnemySpawnedEvent?.Invoke(prefab);
     }
 
 }

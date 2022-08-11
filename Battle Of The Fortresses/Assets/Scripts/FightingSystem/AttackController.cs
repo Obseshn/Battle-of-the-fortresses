@@ -65,7 +65,6 @@ public class AttackController : MonoBehaviour
     private void SendReadyToAttack(Transform target)
     {
         Debug.Log(target.name + "has been attacked!");
-        /*target.GetComponent<HealthSystem>().TakeDamage(attackDamage);*/
         ReadyToAttackEvent?.Invoke(target);
         attackCDCounter = attackCooldown;
     }

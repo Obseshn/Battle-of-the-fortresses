@@ -1,89 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public abstract class ArmyUnit : MonoBehaviour, IDamageAble
+using System;
+public abstract class ArmyUnit : UnitBase
 {
-    public float CurrentHealth { get; set; }
-    [SerializeField] protected string TagOfTarget;
-    [SerializeField] protected float AttackDamage;
-    [SerializeField] protected float Armor;
-    [SerializeField] protected float MoveSpeed;
+    [SerializeField] protected StatesOfArmy currentState;
 
-    protected Transform ViewingTarget;
-    protected Transform AttackTarget;
-
-    [SerializeField] protected AttackController attackController;
-    [SerializeField] private ViewingController viewingController;
-
-    private void OnEnable()
-    {
-        attackController.FindedTargetEvent += SetAttackTarget;
-        attackController.LostTargetEvent += RemoveAttackTarget;
-        attackController.ReadyToAttackEvent += DoAttack;
-
-        viewingController.FindedViewTarget += SetViewingTarget;
-        viewingController.LostViewTarget += RemoveViewingTarget;
-    }
+    
     private void Start()
     {
         attackController.tagOfTarget = TagOfTarget;
-        viewingController.tagOfTarget = TagOfTarget;
     }
 
     private void Update()
     {
-        if (ViewingTarget == null)
-            return;
-        if (AttackTarget == null)
+        if (currentState == StatesOfArmy.BeReadyToFight)
         {
-            MoveTo(ViewingTarget);
+            if (ViewingTarget == null)
+                return;
+
+            if (AttackTarget == null)
+            {
+                MoveTo(ViewingTarget);
+            }
+
+            transform.LookAt(ViewingTarget);
         }
-
-        transform.LookAt(ViewingTarget);  
+         
     }
 
-    protected void MoveTo(Transform target)
+    public void ChangeCurrentState(StatesOfArmy newState)
     {
-        transform.position = Vector3.MoveTowards(transform.position, target.position, MoveSpeed * Time.deltaTime);
-    }
-    public virtual void TakeDamage(float damage)
-    {
-        if (CurrentHealth <= damage)
-        {
-            DestroyYourself();
-            return;
-        }
-
-        CurrentHealth -= (damage - (damage * GetArmorInPercent(Armor)));
-    }
-    protected abstract void DoAttack(Transform target);
-    protected abstract void DestroyYourself();
-
-    protected void SetAttackTarget(Transform target)
-    {
-        AttackTarget = target;
-        ViewingTarget = target;
-    }
-
-    protected void RemoveAttackTarget(Transform target)
-    {
-        AttackTarget = null;
-        ViewingTarget = target;
-    }
-
-    protected void SetViewingTarget(Transform target)
-    {
-        ViewingTarget = target;
-    }
-
-    protected void RemoveViewingTarget()
-    {
-        ViewingTarget = null;
-    }
-
-    protected float GetArmorInPercent(float armor)
-    {
-        return armor / 100;
+        currentState = newState;
     }
 }

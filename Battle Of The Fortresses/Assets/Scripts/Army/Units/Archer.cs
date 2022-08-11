@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Archer : ArmyUnit
 {
-    [SerializeField] private static float MaxHealth = 100;
+    [SerializeField] private static float MaxHealth = 1000;
     [SerializeField] private Rigidbody arrow;
     [SerializeField] private Transform fireStartPosition;
 
     [SerializeField] private float angleInDegrees;
 
     [SerializeField] private float g = -9.8f;
+
+    private void Awake()
+    {
+        CurrentHealth = MaxHealth;
+    }
+
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);

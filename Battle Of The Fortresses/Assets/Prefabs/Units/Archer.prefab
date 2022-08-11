@@ -10,9 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 331109109326873089}
   - component: {fileID: 331109109326873088}
-  - component: {fileID: 331109109326873091}
-  - component: {fileID: 331109109326873090}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Archer
   m_TagString: Army
   m_Icon: {fileID: 0}
@@ -53,39 +51,13 @@ MonoBehaviour:
   AttackDamage: 5
   Armor: 2
   MoveSpeed: 5
+  ViewingTarget: {fileID: 0}
   attackController: {fileID: 5794482476019831805}
-  viewingController: {fileID: 331109109326873090}
+  currentState: 0
   arrow: {fileID: 7519481705534907794, guid: 970a17918aeadaf43a844261fa194d0f, type: 3}
   fireStartPosition: {fileID: 5097750109240606368}
   angleInDegrees: 70
   g: 9.8
---- !u!135 &331109109326873091
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331109109326873093}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5.5
-  m_Center: {x: 0, y: 0, z: -0.122335434}
---- !u!114 &331109109326873090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331109109326873093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dfa50b862abb3946a1845a6b80169ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tagOfTarget: 
-  viewingTarget: {fileID: 0}
 --- !u!1 &6514183296219149480
 GameObject:
   m_ObjectHideFlags: 0

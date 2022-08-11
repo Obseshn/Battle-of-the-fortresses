@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Knight : ArmyUnit
 {
-    private static float MaxHealth = 100f;
+    private static float MaxHealth = 10000f;
 
-    private void Start()
+    private void Awake()
     {
         Armor = 10f;
         CurrentHealth = MaxHealth;

@@ -19,6 +19,8 @@ public class ViewingController : MonoBehaviour
         gameObject.GetComponent<SphereCollider>().isTrigger = true;
     }
 
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (viewingTarget == null && other.CompareTag(tagOfTarget))

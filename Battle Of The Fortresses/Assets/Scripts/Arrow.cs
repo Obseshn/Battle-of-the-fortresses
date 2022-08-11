@@ -14,7 +14,7 @@ public class Arrow : MonoBehaviour
     }
     void Update()
     {
-        Xrotation -= 35 * Time.deltaTime;
+        Xrotation -= 38 * Time.deltaTime;
         transform.rotation = Quaternion.Euler(Xrotation, 0 ,0);
     }
 
