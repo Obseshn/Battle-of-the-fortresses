@@ -42,7 +42,7 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(tagOfTarget))
+        if (other.GetComponent<EnemyUnit>())
         {
             attackTarget = other.transform;
             FindedTargetEvent?.Invoke(other.transform);
@@ -53,7 +53,7 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(tagOfTarget))
+        if (other.GetComponent<EnemyUnit>())
         {
             attackTarget = null;
             LostTargetEvent?.Invoke(other.transform);

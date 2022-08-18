@@ -21,7 +21,7 @@ public class ArmyFormator : MonoBehaviour
     /// <param name="unitsToFormate"></param>
     /// <param name="destination">Around this point army will be line up</param>
     /// <param name="moveSpeed"></param>
-    public void SetFormation(List<GameObject> unitsToFormate, Transform destination, float moveSpeed)
+    public void SetFormation(List<ArmyUnit> unitsToFormate, Transform destination, float moveSpeed)
     {
         _points = EvaluatePoints(unitsToFormate.Count).ToList();
 

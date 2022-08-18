@@ -6,64 +6,44 @@ using UnityEngine;
 public class Barrack : MonoBehaviour
 {
     [SerializeField] private KnightFactory knightFactory;
-    [SerializeField] private ArcherFactory archerFactory;
-    [SerializeField] private GnomeFactory gnomeFactory;
+    [SerializeField] private WizardFactory wizardFactory;
+    [SerializeField] private BarbarianFactory barbarianFactory;
 
-    private readonly float _knightCreatingDelay = 3f;
-
-    public event Action<GameObject> UnitCreatedEvent;
-
-    private void Start()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            if (i % 2 == 0)
-            {
-                CreateKnightWithDelay(i);
-            }
-            if (i % 3 == 0)
-            {
-                CreateGnomeWithDelay(i);
-            }
-            else
-            {
-                CreateArcherWithDelay(i);
-            }
-        }
-    }
-
+    public event Action UnitCreatedEvent;
     public void CreateKnightWithDelay(float delayTime)
     {
         StartCoroutine(CreateKnightDelay(delayTime));
     }
-
-    public void CreateArcherWithDelay(float delayTime)
+    
+    public void CreateWizardWithDelay(float delayTime)
     {
-        StartCoroutine(CreateArcherDelay(delayTime));
+        StartCoroutine(CreateWizardDelay(delayTime));
     }
-    IEnumerator CreateArcherDelay(float delayTime)
+
+    public void CreateBarbarianWithDelay(float delayInSeconds)
+    {
+        StartCoroutine(CreateBarbarianDelay(delayInSeconds));
+    }
+
+
+    IEnumerator CreateWizardDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
-        var prefab = archerFactory.GetNewInstance();
-        UnitCreatedEvent.Invoke(prefab.gameObject);
+        var prefab = wizardFactory.GetNewInstance();
+        UnitCreatedEvent.Invoke();
     }
     
-    IEnumerator CreateKnightDelay(float delayInSeconds)
+    IEnumerator CreateKnightDelay(float delayTime)
     {
-        yield return new WaitForSeconds(delayInSeconds);
+        yield return new WaitForSeconds(delayTime);
         var prefab = knightFactory.GetNewInstance();
-        UnitCreatedEvent?.Invoke(prefab.gameObject);
+        UnitCreatedEvent?.Invoke();
     }
 
-    public void CreateGnomeWithDelay(float delayInSeconds)
-    {
-        StartCoroutine(CreateGnomeDelay(delayInSeconds));
-    }
-
-    IEnumerator CreateGnomeDelay(float delayInSeconds)
+    IEnumerator CreateBarbarianDelay(float delayInSeconds)
     {
         yield return new WaitForSeconds(delayInSeconds);
-        var prefab = gnomeFactory.GetNewInstance();
-        UnitCreatedEvent?.Invoke(prefab.gameObject);
+        var prefab = barbarianFactory.GetNewInstance();
+        UnitCreatedEvent?.Invoke();
     }
 }

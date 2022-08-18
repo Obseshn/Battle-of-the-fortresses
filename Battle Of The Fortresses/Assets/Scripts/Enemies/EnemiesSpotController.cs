@@ -55,7 +55,7 @@ public class EnemiesSpotController : MonoBehaviour
                     foreach(var enemy in controlledEnemies)
                     {
                         enemy.RemoveViewingTarget();
-                        enemy.isOnSpotPosition = false;
+                        enemy.SwitchIsOnSpotPosBool(false);
                     }
                 }
                 
@@ -95,9 +95,8 @@ public class EnemiesSpotController : MonoBehaviour
     IEnumerator SetEnemyIsOnSpotState(bool state, EnemyUnit enemy, float durationInSec)
     {
         yield return new WaitForSeconds(durationInSec);
-        enemy.isOnSpotPosition = state;
+        enemy.SwitchIsOnSpotPosBool(state);
     }
-
     private void AddEnemyToSpot(EnemyUnit enemy)
     {
         controlledEnemies.Add(enemy);

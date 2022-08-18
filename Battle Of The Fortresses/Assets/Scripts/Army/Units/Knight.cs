@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Knight : ArmyUnit
 {
-    private static float MaxHealth = 10000f;
+    private static float MaxHealth = 25f;
 
     private void Awake()
     {
-        Armor = 10f;
         CurrentHealth = MaxHealth;
     }
 
@@ -19,14 +18,13 @@ public class Knight : ArmyUnit
 
     protected override void DestroyYourself()
     {
-        Debug.Log(gameObject.name + "has been destroyed");
-        Destroy(gameObject);
+       
     }
 
     protected override void DoAttack(Transform targetPosition)
     {
+        base.DoAttack(targetPosition);
         Debug.Log("Knight attacked!!");
-        targetPosition.GetComponent<IDamageAble>().TakeDamage(AttackDamage);
     }
 
 }

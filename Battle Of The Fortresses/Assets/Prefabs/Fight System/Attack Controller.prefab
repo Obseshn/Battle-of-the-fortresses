@@ -48,7 +48,7 @@ MonoBehaviour:
   tagOfTarget: 
   attackTarget: {fileID: 0}
   attackCDCounter: 0
-  attackDamage: 1
+  attackRadius: 0
 --- !u!135 &6121085580211371438
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -60,5 +60,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.0247095
-  m_Center: {x: -0.08545327, y: 0.31336328, z: -0.12589121}
+  m_Radius: 1
+  m_Center: {x: 0, y: 0.5, z: 0}

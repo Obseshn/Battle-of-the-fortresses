@@ -5,7 +5,7 @@ public abstract class EnemyUnit : UnitBase
 {
     
     [SerializeField] public Transform spotPosition;
-    [SerializeField] public bool isOnSpotPosition;
+    [SerializeField] protected bool isOnSpotPosition;
 
     /*[SerializeField] private ViewingController viewingController;*/
 
@@ -44,4 +44,16 @@ public abstract class EnemyUnit : UnitBase
         transform.LookAt(ViewingTarget);
     }
 
+    public void SwitchIsOnSpotPosBool(bool newState)
+    {
+        isOnSpotPosition = newState;
+        if (newState && ViewingTarget == null)
+        {
+            animator.SetBool(isMovingBoolName, false);
+        }
+        else
+        {
+            animator.SetBool(isMovingBoolName, true);
+        }
+    }
 }
