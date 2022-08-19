@@ -23,11 +23,12 @@ public class Barbarian : ArmyUnit
 
     protected override void DoAttack(Transform targetPosition)
     {
+        base.DoAttack(targetPosition);
         Collider[] enemiesToAttack = Physics.OverlapSphere(transform.position, attackController.attackRadius, enemyLayer);
         foreach (var enemy in enemiesToAttack)
         {
             enemy.GetComponent<IDamageAble>().TakeDamage(AttackDamage);
         }
-        Debug.Log("Gnome has attacked: " + targetPosition.name);
+        Debug.Log("Barbarian has attacked: " + targetPosition.name);
     }
 }

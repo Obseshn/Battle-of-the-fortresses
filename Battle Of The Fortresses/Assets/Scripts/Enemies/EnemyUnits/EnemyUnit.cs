@@ -5,7 +5,7 @@ public abstract class EnemyUnit : UnitBase
 {
     
     [SerializeField] public Transform spotPosition;
-    [SerializeField] protected bool isOnSpotPosition;
+    [SerializeField] protected bool isOnSpotPosition = true;
 
     /*[SerializeField] private ViewingController viewingController;*/
 

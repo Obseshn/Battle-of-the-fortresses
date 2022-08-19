@@ -1,4 +1,4 @@
-﻿public class EnemyTurtleFactory : UnitsGenericFactory<Turtle>
+﻿public class EnemyTurtleFactory : UnitsGenericFactory<TurtleShell>
 {
 
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -42,7 +40,7 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<EnemyUnit>())
+        if (other.CompareTag(tagOfTarget))
         {
             attackTarget = other.transform;
             FindedTargetEvent?.Invoke(other.transform);
@@ -53,7 +51,7 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<EnemyUnit>())
+        if (other.CompareTag(tagOfTarget))
         {
             attackTarget = null;
             LostTargetEvent?.Invoke(other.transform);
@@ -64,7 +62,7 @@ public class AttackController : MonoBehaviour
     // Ready to attack event
     private void SendReadyToAttack(Transform target)
     {
-        Debug.Log(target.name + "has been attacked!");
+        Debug.Log(target.name + " has been attacked!");
         ReadyToAttackEvent?.Invoke(target);
         attackCDCounter = attackCooldown;
     }

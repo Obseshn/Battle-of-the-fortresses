@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,22 +7,27 @@ using UnityEngine;
 public class EnemiesSpotController : MonoBehaviour
 {
     [SerializeField] private EnemySpawner enemySpawner;
-    BoxCollider spotCollider;
+
+    [SerializeField] private LayerMask armyLayer;
+    [SerializeField] private float observerRadius;
+    [SerializeField] private Transform[] enemiesPositions;
+
     private readonly List<EnemyUnit> controlledEnemies = new List<EnemyUnit>();
     private readonly List<EnemyUnit> enemiesWithoutTarget = new List<EnemyUnit>();
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private float observerRadius;
+    private readonly List<Transform> emptySpotPositions = new List<Transform>();
 
-    private float checkAttackRadiusTime = 4f;
     [SerializeField] private float attackRadiusCounter;
+    private float checkAttackRadiusTime = 4f;
 
+    BoxCollider spotCollider;
     private bool isOnAttack = false;
 
     
     private void Start()
     {
+         emptySpotPositions.AddRange(enemiesPositions.ToList());
          spotCollider = gameObject.GetComponent<BoxCollider>();
-         enemySpawner.CreateGroupOfTurtle(2);
+         enemySpawner.CreateGroupOfTurtle(3);
          enemySpawner.EnemySpawnedEvent += AddEnemyToSpot;
     }
 
@@ -30,37 +36,38 @@ public class EnemiesSpotController : MonoBehaviour
         Debug.Log("Spot controlled: " + controlledEnemies.Count);
         if (attackRadiusCounter <= 0)
         {
-            Collider[] soldiersInObserver = Physics.OverlapSphere(transform.position, observerRadius, layerMask);
-
-            if (controlledEnemies.Count > 0)
+            if (isOnAttack)
             {
-                foreach (var unit in controlledEnemies)
-                {
-                    if (unit.GetComponent<EnemyUnit>().ViewingTarget == null && enemiesWithoutTarget.Contains(unit) == false)
-                    {
-                        enemiesWithoutTarget.Add(unit);
-                    }
-                }
+                Collider[] soldiersInObserver = Physics.OverlapSphere(transform.position, observerRadius, armyLayer);
 
-                if (soldiersInObserver.Length != 0 && enemiesWithoutTarget.Count > 0)
+                if (controlledEnemies.Count > 0)
                 {
-                    foreach (var enemy in controlledEnemies)
+                    foreach (var unit in controlledEnemies)
                     {
-                        enemy.GetComponent<EnemyUnit>().SetViewingTarget(soldiersInObserver[Random.Range(0, soldiersInObserver.Length)].transform);
+                        if (unit.GetComponent<EnemyUnit>().ViewingTarget == null && enemiesWithoutTarget.Contains(unit) == false)
+                        {
+                            enemiesWithoutTarget.Add(unit);
+                        }
                     }
-                    attackRadiusCounter = checkAttackRadiusTime;
-                }
-                else
-                {
-                    foreach(var enemy in controlledEnemies)
+
+                    if (soldiersInObserver.Length != 0 && enemiesWithoutTarget.Count > 0)
                     {
-                        enemy.RemoveViewingTarget();
-                        enemy.SwitchIsOnSpotPosBool(false);
+                        foreach (var enemy in controlledEnemies)
+                        {
+                            enemy.GetComponent<EnemyUnit>().SetViewingTarget(soldiersInObserver[Random.Range(0, soldiersInObserver.Length)].transform);
+                        }
+                        attackRadiusCounter = checkAttackRadiusTime;
+                    }
+                    else
+                    {
+                        foreach (var enemy in controlledEnemies)
+                        {
+                            enemy.RemoveViewingTarget();
+                            enemy.SwitchIsOnSpotPosBool(false);
+                        }
                     }
                 }
-                
             }
-            
         }
         else if (attackRadiusCounter >= 0)
         {
@@ -100,17 +107,21 @@ public class EnemiesSpotController : MonoBehaviour
     private void AddEnemyToSpot(EnemyUnit enemy)
     {
         controlledEnemies.Add(enemy);
+        int index = Random.Range(0, emptySpotPositions.Count);
+        enemy.spotPosition = emptySpotPositions[index];
+        emptySpotPositions.Remove(emptySpotPositions[index]);
         enemy.enemyDied += RemoveEnemyFromSpot;
     }
 
     private void RemoveEnemyFromSpot(EnemyUnit enemy)
     {
         controlledEnemies.Remove(enemy);
+        emptySpotPositions.Add(enemy.spotPosition);
         enemy.enemyDied -= RemoveEnemyFromSpot;
     }
 
     private void OnDrawGizmosSelected()
     {
-            Gizmos.DrawWireSphere(transform.position, observerRadius);
+        Gizmos.DrawWireSphere(transform.position, observerRadius);
     }
 }

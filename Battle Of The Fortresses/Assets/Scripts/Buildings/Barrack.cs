@@ -30,20 +30,20 @@ public class Barrack : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         var prefab = wizardFactory.GetNewInstance();
-        UnitCreatedEvent.Invoke();
+        /*UnitCreatedEvent.Invoke();*/
     }
     
     IEnumerator CreateKnightDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         var prefab = knightFactory.GetNewInstance();
-        UnitCreatedEvent?.Invoke();
+        /*UnitCreatedEvent?.Invoke();*/
     }
 
     IEnumerator CreateBarbarianDelay(float delayInSeconds)
     {
         yield return new WaitForSeconds(delayInSeconds);
         var prefab = barbarianFactory.GetNewInstance();
-        UnitCreatedEvent?.Invoke();
+        /*UnitCreatedEvent?.Invoke();*/
     }
 }
