@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class UnitBase : MonoBehaviour, IDamageAble
 {
+    public Action<UnitBase> UnitDied;
+
     public float CurrentHealth { get; set; }
     [SerializeField] protected string TagOfTarget;
     [SerializeField] protected float AttackDamage;
@@ -11,11 +14,12 @@ public class UnitBase : MonoBehaviour, IDamageAble
     [SerializeField] protected float MoveSpeed;
     [SerializeField] protected Animator animator;
     [SerializeField] protected Rigidbody unitRigidbody;
+
     private Quaternion rotateDirection;
     private float rotationSpeed = 360;
 
     public Transform ViewingTarget;
-    protected Transform AttackTarget;
+    [SerializeField] protected Transform AttackTarget;
 
     [SerializeField] protected AttackController attackController;
 
@@ -30,7 +34,6 @@ public class UnitBase : MonoBehaviour, IDamageAble
         attackController.LostTargetEvent += RemoveAttackTarget;
         attackController.ReadyToAttackEvent += DoAttack;
         unitRigidbody = GetComponent<Rigidbody>();
-        MoveSpeed = 5f;
     }
 
     protected void MoveTo(Transform target)
@@ -53,6 +56,7 @@ public class UnitBase : MonoBehaviour, IDamageAble
         AttackTarget = target;
         ViewingTarget = target;
         animator.SetBool(isMovingBoolName, false);
+        Debug.Log("Enemy get attack target!");
     }
 
     protected void RemoveAttackTarget(Transform target)
@@ -60,6 +64,7 @@ public class UnitBase : MonoBehaviour, IDamageAble
         AttackTarget = null;
         ViewingTarget = target;
         animator.SetBool(isMovingBoolName, true);
+        Debug.Log("Enemy lost attack target!");
     }
 
     public void SetViewingTarget(Transform target)
@@ -81,11 +86,12 @@ public class UnitBase : MonoBehaviour, IDamageAble
 
     protected virtual void DestroyYourself()
     {
-        DieRoutine(1f);
+        StartCoroutine(DieRoutine(1f));
     }
 
     IEnumerator DieRoutine(float durationInSec)
     {
+        UnitDied?.Invoke(GetComponent<UnitBase>());
         animator.SetTrigger(dieTriggerName);
         yield return new WaitForSeconds(durationInSec);
         Debug.Log(gameObject.name + "has been destroyed");
@@ -100,7 +106,6 @@ public class UnitBase : MonoBehaviour, IDamageAble
 
     public void RotateUnitToMoveDirection(Vector3 lookDir)
     {
-
         rotateDirection = Quaternion.LookRotation(lookDir); // Calculate rotation
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDirection, rotationSpeed); // Apply rotation to rb

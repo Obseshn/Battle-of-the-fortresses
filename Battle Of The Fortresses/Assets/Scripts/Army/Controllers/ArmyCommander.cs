@@ -28,10 +28,12 @@ public class ArmyCommander : MonoBehaviour
         attackRadiusCounter = 0;
         GetComponent<SphereCollider>().radius = armyObserverRadius;
     }
+
+    
     private void Update()
     {
         Debug.Log($"UnInArmy: {UnitsInArmy.Count} \t UnWithOutT: {UnitsWithoutTarget.Count} \t UnToF: {UnitsToFollow.Count}");
-
+        
         if (currentStateOfArmy == StatesOfArmy.StandStill)
         {
             return;
@@ -39,6 +41,7 @@ public class ArmyCommander : MonoBehaviour
 
         if (UnitsToFollow.Count >= 1)
         {
+            Debug.Log("UTF COunt: " + UnitsToFollow.Count);
             armyFormator.SetFormation(UnitsToFollow, transform, lineUpSpeed);
         }
 
@@ -96,6 +99,7 @@ public class ArmyCommander : MonoBehaviour
                 UnitsWithoutTarget.Add(unit);
                 UnitsToFollow.Add(unit);
             }
+           
         }
     }
     private void GiveTargetToUnits(Collider[] enemiesInArmyObserver)
@@ -132,6 +136,7 @@ public class ArmyCommander : MonoBehaviour
             {
                 unit.GetComponent<ArmyUnit>().ChangeCurrentState(StatesOfArmy.Follow);
             }
+            
         }
         else if (commandNumber == (int)StatesOfArmy.StandStill)
         {
@@ -143,13 +148,12 @@ public class ArmyCommander : MonoBehaviour
         }
     }
 
-
-
     public void AddUnitToArmyList(ArmyUnit unit)
     {
         UnitsInArmy.Add(unit);
         UnitsWithoutTarget.Add(unit);
         UnitsToFollow.Add(unit);
+        armyFormator.SetLenghtOfSide(UnitsToFollow.Count);
     }
 
     public void KillUnit(ArmyUnit unit)
@@ -164,6 +168,11 @@ public class ArmyCommander : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
          Gizmos.DrawWireSphere(transform.position, armyObserverRadius);
+    }
+
+    public int GetCountOfArmy()
+    {
+        return UnitsInArmy.Count;
     }
 }
 

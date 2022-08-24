@@ -1,24 +1,23 @@
 using UnityEngine;
-using System.Collections;
 using System;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private EnemyTurtleFactory enemyTurtleFactory;
+    [SerializeField] private EnemyUnit[] enemyUnits;
     public Action<EnemyUnit> EnemySpawnedEvent;
-    public void CreateGroupOfTurtle(float countOfTurtles)
+
+    public void CreateRandomGroupOfEnemies(Transform[] spawnPositions)
     {
-        for (int i = 0; i < countOfTurtles; i++)
-        {
-            StartCoroutine(CreateTurtleDelay(i));
-        }
+        CreateEnemy(spawnPositions, enemyUnits[UnityEngine.Random.Range(0, enemyUnits.Length)]);
     }
-    IEnumerator CreateTurtleDelay(float delayTime)
+    private void CreateEnemy(Transform[] spawnPositions, EnemyUnit unitToSpawn)
     {
-        yield return new WaitForSeconds(delayTime);
-        var prefab = enemyTurtleFactory.GetNewInstance();
-        prefab.GetComponent<EnemyUnit>().spotPosition = enemyTurtleFactory._spawnPoint;
-        EnemySpawnedEvent?.Invoke(prefab);
+        for (int i = 0; i < spawnPositions.Length; i++)
+        {
+            var prefab = Instantiate(unitToSpawn, spawnPositions[i].position, spawnPositions[i].rotation);
+            prefab.GetComponent<EnemyUnit>().spotPosition = spawnPositions[i];
+            EnemySpawnedEvent?.Invoke(prefab);
+        }
     }
 
 }

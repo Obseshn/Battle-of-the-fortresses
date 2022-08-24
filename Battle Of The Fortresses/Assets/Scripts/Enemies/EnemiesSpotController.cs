@@ -25,10 +25,11 @@ public class EnemiesSpotController : MonoBehaviour
     
     private void Start()
     {
-         emptySpotPositions.AddRange(enemiesPositions.ToList());
-         spotCollider = gameObject.GetComponent<BoxCollider>();
-         enemySpawner.CreateGroupOfTurtle(3);
-         enemySpawner.EnemySpawnedEvent += AddEnemyToSpot;
+        enemySpawner.EnemySpawnedEvent += AddEnemyToSpot;
+        emptySpotPositions.AddRange(enemiesPositions.ToList());
+        spotCollider = gameObject.GetComponent<BoxCollider>();
+        enemySpawner.CreateRandomGroupOfEnemies(enemiesPositions);
+         
     }
 
     private void Update()
@@ -38,24 +39,30 @@ public class EnemiesSpotController : MonoBehaviour
         {
             if (isOnAttack)
             {
+                Debug.Log("spot: " + transform.name + " is under attack!");
                 Collider[] soldiersInObserver = Physics.OverlapSphere(transform.position, observerRadius, armyLayer);
 
+                Debug.Log("Controlled enemies count: " + controlledEnemies.Count);
                 if (controlledEnemies.Count > 0)
                 {
+                    Debug.Log("Controlled enemies > 0");
                     foreach (var unit in controlledEnemies)
                     {
                         if (unit.GetComponent<EnemyUnit>().ViewingTarget == null && enemiesWithoutTarget.Contains(unit) == false)
                         {
                             enemiesWithoutTarget.Add(unit);
+                            Debug.Log("Added new enemy without target");
                         }
                     }
 
                     if (soldiersInObserver.Length != 0 && enemiesWithoutTarget.Count > 0)
                     {
-                        foreach (var enemy in controlledEnemies)
+                        foreach (var enemy in enemiesWithoutTarget)
                         {
                             enemy.GetComponent<EnemyUnit>().SetViewingTarget(soldiersInObserver[Random.Range(0, soldiersInObserver.Length)].transform);
+                            Debug.Log("Set view target for enemy!");
                         }
+                        enemiesWithoutTarget.Clear();
                         attackRadiusCounter = checkAttackRadiusTime;
                     }
                     else
@@ -69,7 +76,7 @@ public class EnemiesSpotController : MonoBehaviour
                 }
             }
         }
-        else if (attackRadiusCounter >= 0)
+        else if (attackRadiusCounter > 0)
         {
             attackRadiusCounter -= Time.deltaTime;
         }
@@ -94,7 +101,7 @@ public class EnemiesSpotController : MonoBehaviour
             StartCoroutine(SetEnemyIsOnSpotState(false, other.GetComponent<EnemyUnit>(), 0));
             if (Physics.OverlapBox(transform.position, spotCollider.size).Length <= 0)
             {
-                enemySpawner.CreateGroupOfTurtle(3);
+                enemySpawner.CreateRandomGroupOfEnemies(enemiesPositions);
             }
         }
     }
@@ -107,17 +114,17 @@ public class EnemiesSpotController : MonoBehaviour
     private void AddEnemyToSpot(EnemyUnit enemy)
     {
         controlledEnemies.Add(enemy);
-        int index = Random.Range(0, emptySpotPositions.Count);
-        enemy.spotPosition = emptySpotPositions[index];
-        emptySpotPositions.Remove(emptySpotPositions[index]);
-        enemy.enemyDied += RemoveEnemyFromSpot;
+        /*int index = Random.Range(0, emptySpotPositions.Count);*/
+        /*enemy.spotPosition = emptySpotPositions[index];*/
+        /*emptySpotPositions.Remove(emptySpotPositions[index]);*/
+        enemy.EnemyDied += RemoveEnemyFromSpot;
     }
 
     private void RemoveEnemyFromSpot(EnemyUnit enemy)
     {
         controlledEnemies.Remove(enemy);
         emptySpotPositions.Add(enemy.spotPosition);
-        enemy.enemyDied -= RemoveEnemyFromSpot;
+        enemy.EnemyDied -= RemoveEnemyFromSpot;
     }
 
     private void OnDrawGizmosSelected()

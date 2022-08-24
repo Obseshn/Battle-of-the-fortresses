@@ -5,11 +5,12 @@ using System;
 public class AttackController : MonoBehaviour
 {
     [SerializeField] public string tagOfTarget;
-    [SerializeField] private Transform attackTarget;
+    [SerializeField] public Transform attackTarget;
  
     [SerializeField] private readonly float attackCooldown = 2;
     [SerializeField] private float attackCDCounter;
     [SerializeField] public float attackRadius;
+    [SerializeField] private LayerMask opponentLayer;
 
     public event Action<Transform> FindedTargetEvent;
     public event Action<Transform> LostTargetEvent;
@@ -37,25 +38,19 @@ public class AttackController : MonoBehaviour
             attackCDCounter -= Time.deltaTime;
         }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(tagOfTarget))
         {
-            attackTarget = other.transform;
-            FindedTargetEvent?.Invoke(other.transform);
-            attackCDCounter = attackCooldown;
-            Debug.Log("Target has entered to the attack radius");
+            SetAttackTarget(other.GetComponent<UnitBase>());
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(tagOfTarget))
+        if (other.transform == attackTarget)
         {
-            attackTarget = null;
-            LostTargetEvent?.Invoke(other.transform);
-            Debug.Log("Target has left from the attack radius");
+            RemoveAttackTarget(other.GetComponent<UnitBase>());
         }
     }
 
@@ -65,5 +60,24 @@ public class AttackController : MonoBehaviour
         Debug.Log(target.name + " has been attacked!");
         ReadyToAttackEvent?.Invoke(target);
         attackCDCounter = attackCooldown;
+    }
+    private void SetAttackTarget(UnitBase unitToAdd)
+    {
+        attackTarget = unitToAdd.transform;
+        unitToAdd.UnitDied += RemoveAttackTarget;
+        FindedTargetEvent?.Invoke(unitToAdd.transform);
+        attackCDCounter = attackCooldown;
+        Debug.Log("Target has entered to the attack radius");
+    }
+    private void RemoveAttackTarget(UnitBase unitToRemove)
+    {
+        attackTarget = null;
+        LostTargetEvent?.Invoke(unitToRemove.transform);
+        Debug.Log("Target had been removed from attack cntrller");
+        Collider[] opponentsInAttackRadius =  Physics.OverlapSphere(transform.position, attackRadius, opponentLayer);
+        if (opponentsInAttackRadius.Length > 0)
+        {
+            SetAttackTarget(opponentsInAttackRadius[UnityEngine.Random.Range(0, opponentsInAttackRadius.Length)].GetComponent<UnitBase>());
+        }
     }
 }

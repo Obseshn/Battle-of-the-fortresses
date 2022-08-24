@@ -6,20 +6,13 @@ public abstract class EnemyUnit : UnitBase
     
     [SerializeField] public Transform spotPosition;
     [SerializeField] protected bool isOnSpotPosition = true;
+    [SerializeField] private float minEnemyReward = 5;
 
-    /*[SerializeField] private ViewingController viewingController;*/
-
-    public Action<EnemyUnit> enemyDied;
-
-    private void OnEnable()
-    {
-        /*viewingController.FindedViewTarget += SetViewingTarget;
-        viewingController.LostViewTarget += RemoveViewingTarget;*/
-    }
+    public Action<EnemyUnit> EnemyDied;
+    public static Action PayEnemyReward;
     private void Start()
     {
         attackController.tagOfTarget = TagOfTarget;
-       /* viewingController.tagOfTarget = TagOfTarget;*/
     }
 
     private void Update()
@@ -36,24 +29,32 @@ public abstract class EnemyUnit : UnitBase
             return;
         }
             
-        if (AttackTarget == null)
+        if (attackController.attackTarget == null)
         {
             MoveTo(ViewingTarget);
+            transform.LookAt(ViewingTarget);
+            Debug.Log("Enemy is moving!");
         }
 
-        transform.LookAt(ViewingTarget);
+        transform.LookAt(AttackTarget);
     }
 
+    protected override void DestroyYourself()
+    {
+        EnemyDied?.Invoke(this);
+        PayEnemyReward?.Invoke();
+        base.DestroyYourself(); 
+    }
     public void SwitchIsOnSpotPosBool(bool newState)
     {
         isOnSpotPosition = newState;
         if (newState && ViewingTarget == null)
         {
-            animator.SetBool(isMovingBoolName, false);
+          /*  animator.SetBool(isMovingBoolName, false);*/
         }
         else
         {
-            animator.SetBool(isMovingBoolName, true);
+            /*animator.SetBool(isMovingBoolName, true);*/
         }
     }
 }

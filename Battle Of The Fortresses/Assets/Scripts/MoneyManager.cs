@@ -1,28 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MoneyManager : MonoBehaviour
 {
-    [SerializeField] private float _money;
+    [SerializeField] private float money;
+    [SerializeField] private float startMoney = 150f;
+    [SerializeField] private float moneyMultiplyIndex = 0.3f;
+    [SerializeField] private float minRewardForEnemyKill = 5f;
 
-    private bool HasEnoughMoney(float moneyToCheck)
+    private void Start()
     {
-        if (moneyToCheck >= _money)
+        money = startMoney;
+        EnemyUnit.PayEnemyReward += AddEnemyReward; 
+    }
+    private void Update()
+    {
+        money += Time.deltaTime * moneyMultiplyIndex;
+    }
+
+    public bool HasEnoughMoney(float moneyToCheck)
+    {
+        if (moneyToCheck <= money)
         {
             return true;
         }
         else
         {
+            Debug.Log("Player hasn't so much money!");
             return false;
         }
     }
 
-    private void DeductMoney(float moneyToDeduct)
+    public void DeductMoney(float moneyToDeduct)
     {
         if (HasEnoughMoney(moneyToDeduct))
         {
-            _money -= moneyToDeduct;
+            money -= moneyToDeduct;
         }
         else
         {
@@ -34,12 +46,22 @@ public class MoneyManager : MonoBehaviour
     {
         if (moneyToAdd > 0)
         {
-            _money += moneyToAdd;
+            money += moneyToAdd;
         }
         else
         {
             Debug.LogError("You have tried to add negative amount of money or zero!");
         }
 
+    }
+
+    private void AddEnemyReward()
+    {
+        AddMoney(Random.Range(minRewardForEnemyKill, minRewardForEnemyKill * 1.5f));
+    }
+
+    public int GetCurrentMoney()
+    {
+        return Mathf.RoundToInt(money);
     }
 }

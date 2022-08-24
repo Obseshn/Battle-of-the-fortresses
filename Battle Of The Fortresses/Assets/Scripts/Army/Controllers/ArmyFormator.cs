@@ -10,9 +10,10 @@ public class ArmyFormator : MonoBehaviour
     [SerializeField] private int _unitDepth = 3;*/
     [SerializeField] private bool _isHollow = true;
     [SerializeField] private float _noise = 0f;
+    [SerializeField] private float currentLength;
     
    
-    private List<Vector3> _points = new List<Vector3>();
+    private List<Vector3> points = new List<Vector3>();
 
     /// <summary>
     /// Method that line up units.
@@ -22,28 +23,25 @@ public class ArmyFormator : MonoBehaviour
     /// <param name="moveSpeed"></param>
     public void SetFormation(List<ArmyUnit> unitsToFormate, Transform destination, float moveSpeed)
     {
-        _points = EvaluatePoints(unitsToFormate.Count).ToList();
+        points = EvaluatePoints(unitsToFormate.Count, currentLength).ToList();
 
         for (int i = 0; i < unitsToFormate.Count; i++)
         {
             unitsToFormate[i].transform.position = Vector3.MoveTowards(unitsToFormate[i].transform.position,
-               destination.position + _points[i], moveSpeed * Time.deltaTime);
+               destination.position + points[i], moveSpeed * Time.deltaTime);
         }
 
     }
 
-    public IEnumerable<Vector3> EvaluatePoints(int countOfUnits)
+    public IEnumerable<Vector3> EvaluatePoints(int countOfUnits, float lengthOfSide)
     {
-        float lenght = GetLenghtOfSide(countOfUnits);
-        Debug.Log(lenght + "L");
+        var middleOffset = new Vector3(lengthOfSide * 0.5f, 0, lengthOfSide * 0.5f);
 
-        var middleOffset = new Vector3(lenght * 0.5f, 0, lenght * 0.5f);
-
-        for (int z = 0; z < lenght; z++)
+        for (int z = 0; z < lengthOfSide; z++)
         {
-            for (int x = 0; x < lenght; x++)
+            for (int x = 0; x < lengthOfSide; x++)
             {
-                if (_isHollow && x != 0 && x != lenght - 1 && z != 0 && z != lenght - 1)
+                if (_isHollow && x != 0 && x != lengthOfSide - 1 && z != 0 && z != lengthOfSide - 1)
                     continue;
 
                 var position = new Vector3(x, 0, z);
@@ -66,8 +64,9 @@ public class ArmyFormator : MonoBehaviour
         return new Vector3(noise, 0, noise);
     }*/
 
-    private float GetLenghtOfSide(float countOfUnits)
+    public void SetLenghtOfSide(float countOfUnits)
     {
-        return (float)Math.Ceiling(Mathf.Sqrt(countOfUnits));
+        currentLength = (float)Math.Ceiling(Mathf.Sqrt(countOfUnits));
+        Debug.Log(currentLength + " - curLen");
     }
 }
