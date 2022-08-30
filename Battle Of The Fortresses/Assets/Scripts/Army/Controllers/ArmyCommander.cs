@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(SphereCollider))]
 public class ArmyCommander : MonoBehaviour
 {
+    public static Action<int> OnCountOfUnitsChange;
+
+
     [SerializeField] private Joystick joystick;
     [SerializeField] private ArmyFormator armyFormator;
     [SerializeField] private ArmyStateEffectController armyStateEffectController;
@@ -19,6 +23,7 @@ public class ArmyCommander : MonoBehaviour
     [SerializeField] private float attackRadiusCounter;
     private float checkAttackRadiusTime = 1f;
     
+
 
     private readonly List<ArmyUnit> UnitsInArmy = new List<ArmyUnit>();
     private readonly List<ArmyUnit> UnitsWithoutTarget = new List<ArmyUnit>();
@@ -94,7 +99,7 @@ public class ArmyCommander : MonoBehaviour
     {
         foreach (var unit in UnitsInArmy)
         {
-            if (unit.GetComponent<ArmyUnit>().ViewingTarget == null && UnitsWithoutTarget.Contains(unit) == false)
+            if (unit.AttackTarget == null && UnitsWithoutTarget.Contains(unit) == false)
             {
                 UnitsWithoutTarget.Add(unit);
                 UnitsToFollow.Add(unit);
@@ -106,7 +111,7 @@ public class ArmyCommander : MonoBehaviour
     {
         foreach (var unit in UnitsWithoutTarget)
         {
-            unit.GetComponent<ArmyUnit>().SetViewingTarget(enemiesInArmyObserver[Random.Range(0, enemiesInArmyObserver.Length)].transform); // !!!!!!
+            unit.GetComponent<ArmyUnit>().SetViewingTarget(enemiesInArmyObserver[UnityEngine.Random.Range(0, enemiesInArmyObserver.Length)].transform); // !!!!!!
             UnitsToFollow.Remove(unit);
         }
         UnitsWithoutTarget.Clear();
@@ -150,17 +155,21 @@ public class ArmyCommander : MonoBehaviour
 
     public void AddUnitToArmyList(ArmyUnit unit)
     {
+        unit.UnitDied += KillUnit;
         UnitsInArmy.Add(unit);
         UnitsWithoutTarget.Add(unit);
         UnitsToFollow.Add(unit);
         armyFormator.SetLenghtOfSide(UnitsToFollow.Count);
+        OnCountOfUnitsChange?.Invoke(UnitsInArmy.Count);
     }
 
-    public void KillUnit(ArmyUnit unit)
+    public void KillUnit(UnitBase unit)
     {
-        UnitsInArmy.Remove(unit);
-        UnitsWithoutTarget.Remove(unit);
-        UnitsToFollow.Remove(unit);
+        ArmyUnit armyUnit = unit.GetComponent<ArmyUnit>();
+        UnitsInArmy.Remove(armyUnit);
+        UnitsWithoutTarget.Remove(armyUnit);
+        UnitsToFollow.Remove(armyUnit);
+        OnCountOfUnitsChange?.Invoke(UnitsInArmy.Count);
     }
 
     
@@ -173,6 +182,11 @@ public class ArmyCommander : MonoBehaviour
     public int GetCountOfArmy()
     {
         return UnitsInArmy.Count;
+    }
+
+    public StatesOfArmy GetStateOfArmy()
+    {
+        return currentStateOfArmy;
     }
 }
 

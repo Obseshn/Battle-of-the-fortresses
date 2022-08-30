@@ -15,11 +15,32 @@ public class Barrack : MonoBehaviour
     private readonly float wizardPrice = 30f;
     private readonly float barbarianPrice = 40f;
 
+    private readonly float knightSpawnTime = 3f;
+    private readonly float wizardSpawnTime = 5f;
+    private readonly float barbarianSpawnTime = 10f;
+
     public event Action UnitCreatedEvent;
 
     private void Start()
     {
        
+    }
+
+    public void CreateRandomUnit()
+    {
+        int index = UnityEngine.Random.Range(0, 3); // 3 - current count of soldiers prefabs, or factories!
+        if (index == 0)
+        {
+            CreateKnightWithDelay(knightSpawnTime);
+        }
+        else if (index == 1)
+        {
+            CreateWizardWithDelay(wizardSpawnTime);
+        }
+        else if (index == 2)
+        {
+            CreateBarbarianWithDelay(barbarianSpawnTime);
+        }
     }
     public void CreateKnightWithDelay(float delayTime)
     {

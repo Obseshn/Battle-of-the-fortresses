@@ -69,12 +69,15 @@ public class AttackController : MonoBehaviour
         attackCDCounter = attackCooldown;
         Debug.Log("Target has entered to the attack radius");
     }
-    private void RemoveAttackTarget(UnitBase unitToRemove)
+    public void RemoveAttackTarget(UnitBase unitToRemove)
     {
+        unitToRemove.UnitDied -= RemoveAttackTarget;
         attackTarget = null;
         LostTargetEvent?.Invoke(unitToRemove.transform);
+        
         Debug.Log("Target had been removed from attack cntrller");
         Collider[] opponentsInAttackRadius =  Physics.OverlapSphere(transform.position, attackRadius, opponentLayer);
+        Debug.Log(transform.parent.name + " find: " + opponentsInAttackRadius.Length);
         if (opponentsInAttackRadius.Length > 0)
         {
             SetAttackTarget(opponentsInAttackRadius[UnityEngine.Random.Range(0, opponentsInAttackRadius.Length)].GetComponent<UnitBase>());

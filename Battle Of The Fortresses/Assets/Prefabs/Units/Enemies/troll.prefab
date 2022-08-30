@@ -753,7 +753,7 @@ MonoBehaviour:
   attackController: {fileID: 8421103678086706510}
   spotPosition: {fileID: 0}
   isOnSpotPosition: 0
-  minEnemyReward: 5
+  minEnemyReward: 4
 --- !u!136 &2319270014754115281
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -782,7 +782,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!1 &2319270013583053324
 GameObject:
@@ -2694,6 +2694,10 @@ PrefabInstance:
     - target: {fileID: 6121085580211371436, guid: 664f5f2fd8bf4fb45b1237d724ebba36, type: 3}
       propertyPath: attackRadius
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6121085580211371436, guid: 664f5f2fd8bf4fb45b1237d724ebba36, type: 3}
+      propertyPath: opponentLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 6121085580211371437, guid: 664f5f2fd8bf4fb45b1237d724ebba36, type: 3}
       propertyPath: m_Name
